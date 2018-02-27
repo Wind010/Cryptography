@@ -2,7 +2,9 @@
 Wrappers around .NET Cryptographic Service Providers.
 
 
-Example Usage:
-GenerateKeys -p C:\Temp\PrivateKey.txt -pub C:\Temp\PublicKey.txt 
-Encrypt -pub C:\Temp\PublicKey.txt -ue C:\Temp\UnEncrypted1.txt -en C:\Temp\Encrypted.txt
-Decrypt -p C:\Temp\PublicKey.txt -ue C:\Temp\UnEncrypted2.txt -en C:\Temp\Encrypted.txt
+## Example Usage
+Cryptography.exe GenerateKeys -p PrivateKey.txt -pub PublicKey.txt 
+
+Cryptography.exe Encrypt -pub PublicKey.txt -ue UnEncrypted1.txt -en Encrypted.txt
+
+Cryptography.exe Decrypt -p PublicKey.txt -ue UnEncrypted2.txt -en Encrypted.txt
