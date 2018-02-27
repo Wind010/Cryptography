@@ -1,0 +1,42 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2024
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{3A2D90CA-4D32-4D04-A7EC-71E5D2E05633}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CryptographyTests", "Tests\CryptographyTests.csproj", "{6E094388-E668-441D-B7C5-B33C188C42FE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cryptography", "Cryptography\Cryptography.csproj", "{9EC10006-3F56-4D29-A5B8-5E9D9621FC8D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cryptography.Lib", "Cryptography.Lib\Cryptography.Lib.csproj", "{84A4E348-7D49-4A80-8718-8092481BD24D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6E094388-E668-441D-B7C5-B33C188C42FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E094388-E668-441D-B7C5-B33C188C42FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E094388-E668-441D-B7C5-B33C188C42FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E094388-E668-441D-B7C5-B33C188C42FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9EC10006-3F56-4D29-A5B8-5E9D9621FC8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9EC10006-3F56-4D29-A5B8-5E9D9621FC8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9EC10006-3F56-4D29-A5B8-5E9D9621FC8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9EC10006-3F56-4D29-A5B8-5E9D9621FC8D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84A4E348-7D49-4A80-8718-8092481BD24D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84A4E348-7D49-4A80-8718-8092481BD24D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84A4E348-7D49-4A80-8718-8092481BD24D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84A4E348-7D49-4A80-8718-8092481BD24D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6E094388-E668-441D-B7C5-B33C188C42FE} = {3A2D90CA-4D32-4D04-A7EC-71E5D2E05633}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4A6D791F-762A-432A-ACAB-6EBDBCA0DA7A}
+	EndGlobalSection
+EndGlobal
