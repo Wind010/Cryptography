@@ -8,6 +8,7 @@ namespace Cryptography
     using PowerArgs;
 
     using Lib;
+    using Lib.Models;
 
     [ArgExceptionBehavior(ArgExceptionPolicy.StandardExceptionHandling)]
     public class Processor
@@ -24,21 +25,21 @@ namespace Cryptography
             IFileHandler privateKeyFileHandler = new FileHandler(args.PrivateKeyFileName);
 
             var cryptography = new Cryptography();
-            cryptography.GeneratePrivatePublicKeys();
+            PrivatePublicKeyPair keyPair = cryptography.GeneratePrivatePublicKeys();
 
             if (args.ShowKeys)
             {
                 Console.WriteLine("Private Key:  ");
-                Console.WriteLine(cryptography.PrivateKey);
+                Console.WriteLine(keyPair.PrivateKey);
                 Console.WriteLine();
                 Console.WriteLine("Public Key:  ");
-                Console.WriteLine(cryptography.PublicKey);
+                Console.WriteLine(keyPair.PublicKey);
 
                 return;
             }
 
-            publicKeyFileHandler.WriteToFile(cryptography.PublicKey);
-            privateKeyFileHandler.WriteToFile(cryptography.PrivateKey);
+            publicKeyFileHandler.WriteToFile(keyPair.PublicKey);
+            privateKeyFileHandler.WriteToFile(keyPair.PrivateKey);
         }
 
 
@@ -49,20 +50,21 @@ namespace Cryptography
             IFileHandler unEncryptedFileHandler = new FileHandler(args.UnencryptedFileName);
             IFileHandler encryptedFileHandler = new FileHandler(args.EncryptedFileName);
 
-            var cryptography = new Cryptography { PublicKey = publicKeyFileHandler.ReadFile() };
+            var cryptography = new Cryptography();
+            string publicKey = publicKeyFileHandler.ReadFile();
             string unencryptedText = unEncryptedFileHandler.ReadFile();
-            Byte[] encryptedBytes = cryptography.Encrypt(unencryptedText);
+            Byte[] encryptedBytes = cryptography.Encrypt(publicKey, unencryptedText);
 
             if (args.ShowKeys)
             {
                 Console.WriteLine("Public Key:  ");
-                Console.WriteLine(cryptography.PublicKey);
+                Console.WriteLine(publicKey);
                 Console.WriteLine();
                 Console.WriteLine("Unencrypted:  ");
                 Console.WriteLine(unencryptedText);
                 Console.WriteLine();
                 Console.WriteLine("Encrypted:  ");
-                string encryptedText = Encoding.Default.GetString(encryptedBytes);
+                string encryptedText = Encoding.Unicode.GetString(encryptedBytes);
                 Console.WriteLine(encryptedText);
                 return;
             }
@@ -78,10 +80,10 @@ namespace Cryptography
             IFileHandler unEncryptedFileHandler = new FileHandler(args.UnencryptedFileName);
             IFileHandler encryptedFileHandler = new FileHandler(args.EncryptedFileName);
 
-            var cryptography = new Cryptography() { PrivateKey = privateKeyFileHandler.ReadFile() };
-
+            var cryptography = new Cryptography();
+            string privateKey = privateKeyFileHandler.ReadFile();
             Byte[] encryptedBytes = encryptedFileHandler.ReadEncryptedFile();
-            string decryptedText = cryptography.Decrypt(encryptedBytes);
+            string decryptedText = cryptography.Decrypt(privateKey, encryptedBytes);
 
             if (args.ShowKeys)
             {
