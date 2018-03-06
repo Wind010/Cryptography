@@ -33,7 +33,7 @@ namespace Cryptography.Lib.Tests
 
 
         [TestMethod]
-        public void GeneratePrivatePublicKeys_Valid_KeysGenerated()
+        public void GeneratePrivatePublicKeys_PROV_RSA_FULL_KeysGenerated()
         {
             _keyPair = _cryptography.GeneratePrivatePublicKeys();
             _keyPair.PrivateKey.Should().NotBeNullOrWhiteSpace();
@@ -41,7 +41,17 @@ namespace Cryptography.Lib.Tests
         }
 
         [TestMethod]
-        public void Encrypt_Valid_StringEncrypted()
+        public void GeneratePrivatePublicKeys_PROV_RSA_AES_KeysGenerated()
+        {
+            _cryptography = new Cryptography(ProviderType.PROV_RSA_AES);
+            _keyPair = _cryptography.GeneratePrivatePublicKeys();
+            _keyPair.PrivateKey.Should().NotBeNullOrWhiteSpace();
+            _keyPair.PublicKey.Should().NotBeNullOrWhiteSpace();
+            _keyPair.PrivateKey.Should().Be(_keyPair.PublicKey);
+        }
+
+        [TestMethod]
+        public void Encrypt_PROV_RSA_FULL_StringEncrypted()
         {
             const string Test = "Test";
             byte[] encryptedBytes = _cryptography.Encrypt(_keyPair.PublicKey, Test);
@@ -51,7 +61,7 @@ namespace Cryptography.Lib.Tests
         }
 
         [TestMethod]
-        public void Decrypt_Valid_StringDecrypted()
+        public void Decrypt_PROV_RSA_FULL_StringDecrypted()
         {
             const string Test = "Test";
             byte[] encryptedBytes = _cryptography.Encrypt(_keyPair.PublicKey, Test);
