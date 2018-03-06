@@ -11,7 +11,7 @@ namespace Cryptography.Lib.Tests
     [TestClass]
     public class FileHandlerTests
     {
-        Mock<IFileHandler> _mockFileHandler;
+        private Mock<IFileHandler> _mockFileHandler;
 
         [ClassInitialize()]
         public static void ClassInitialize(TestContext context)
