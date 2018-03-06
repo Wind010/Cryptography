@@ -61,8 +61,6 @@ namespace Cryptography.Lib.Extensions
             return string.Format("<RSAKeyValue><Modulus>{0}</Modulus><Exponent>{1}</Exponent></RSAKeyValue>",
                 Convert.ToBase64String(parameters.Modulus),
                 Convert.ToBase64String(parameters.Exponent));
-
-
         }
     }
 }

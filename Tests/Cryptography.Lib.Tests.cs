@@ -47,7 +47,7 @@ namespace Cryptography.Lib.Tests
             _keyPair = _cryptography.GeneratePrivatePublicKeys();
             _keyPair.PrivateKey.Should().NotBeNullOrWhiteSpace();
             _keyPair.PublicKey.Should().NotBeNullOrWhiteSpace();
-            _keyPair.PrivateKey.Should().Be(_keyPair.PublicKey);
+            _keyPair.PrivateKey.Should().NotBe(_keyPair.PublicKey);
         }
 
         [TestMethod]
