@@ -1,21 +1,25 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Cryptography.Lib.Exceptions
 {
-    public class DecryptException : Exception
+    [Serializable]
+    [ExcludeFromCodeCoverage]
+    public class DecryptException : BaseException
     {
         public DecryptException()
         {
         }
 
         public DecryptException(string message)
-                : base(message)
+            : base(message)
         {
         }
 
         public DecryptException(string message, Exception inner)
-                : base(message, inner)
+            : base(message, inner)
         {
         }
+
     }
 }

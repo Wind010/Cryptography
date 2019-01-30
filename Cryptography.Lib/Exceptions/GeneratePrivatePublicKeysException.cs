@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Cryptography.Lib.Exceptions
 {
-    public class GeneratePrivatePublicKeysException : Exception
+    [Serializable]
+    [ExcludeFromCodeCoverage]
+    public class GeneratePrivatePublicKeysException : BaseException
     {
         public GeneratePrivatePublicKeysException()
         {
