@@ -2,7 +2,7 @@
 using System.Security.Cryptography;
 using System.Xml;
 
-namespace Cryptography.Lib.Extensions
+namespace Cryptography.Core.Extensions
 {
     /// <summary>
     /// Taken from https://gist.github.com/Jargon64/5b172c452827e15b21882f1d76a94be4.

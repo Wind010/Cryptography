@@ -1,12 +1,11 @@
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Cryptography.Lib.Tests
+namespace Cryptography.Core.Tests
 {
-    using Models;
+    using Cryptography.Common.Models;
 
     using FluentAssertions;
-
 
     [TestClass]
     public class CryptographyTests

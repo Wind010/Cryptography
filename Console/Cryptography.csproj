@@ -12,7 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Cryptography.Lib\Cryptography.Lib.csproj" />
+    <ProjectReference Include="..\Common\Cryptography.Common.csproj" />
+    <ProjectReference Include="..\Core\Cryptography.Core.csproj" />
   </ItemGroup>
 
 </Project>

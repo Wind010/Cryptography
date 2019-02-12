@@ -7,8 +7,9 @@ namespace Cryptography
     using CmdLineArgs;
     using PowerArgs;
 
-    using Lib;
-    using Lib.Models;
+    using Core;
+    using Common.Models;
+    using Cryptography.Common;
 
     [ArgExceptionBehavior(ArgExceptionPolicy.StandardExceptionHandling)]
     public class Processor

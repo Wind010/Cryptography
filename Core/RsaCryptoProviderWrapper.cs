@@ -2,11 +2,11 @@
 using System.Text;
 using System.Security.Cryptography;
 
-namespace Cryptography.Lib
+namespace Cryptography.Core
 {
-    using Exceptions;
+    using Common.Models;
+    using Common.Exceptions;
     using Extensions;
-    using Models;
 
     public class RsaCryptoProviderWrapper : ICryptography
     {

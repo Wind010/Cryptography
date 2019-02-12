@@ -1,9 +1,10 @@
 ﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Cryptography.Lib.Tests
+namespace Cryptography.Core.Tests
 {
     using AutoFixture;
+    using Cryptography.Common;
     using FluentAssertions;
     using Moq;
 

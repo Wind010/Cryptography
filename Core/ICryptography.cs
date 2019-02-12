@@ -1,9 +1,9 @@
 ﻿using System;
 
-namespace Cryptography.Lib
+namespace Cryptography.Core
 {
-    using Common;
-    using Models;
+    using Common.Models;
+    using Common.Exceptions;
 
     public interface ICryptography
     {

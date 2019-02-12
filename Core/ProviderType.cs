@@ -1,5 +1,5 @@
 ﻿
-namespace Cryptography.Lib
+namespace Cryptography.Core
 {
     public enum ProviderType
     {
