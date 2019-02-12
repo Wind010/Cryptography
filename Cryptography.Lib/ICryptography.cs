@@ -2,6 +2,7 @@
 
 namespace Cryptography.Lib
 {
+    using Common;
     using Models;
 
     public interface ICryptography
