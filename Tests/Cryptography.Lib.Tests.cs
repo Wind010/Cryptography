@@ -22,7 +22,7 @@ namespace Cryptography.Lib.Tests
         [TestInitialize]
         public void Initialize()
         {
-            _cryptography = new Cryptography();
+            _cryptography = new RsaCryptoProviderWrapper();
             _keyPair = _cryptography.GeneratePrivatePublicKeys();
         }
 
@@ -43,7 +43,7 @@ namespace Cryptography.Lib.Tests
         [TestMethod]
         public void GeneratePrivatePublicKeys_PROV_RSA_AES_KeysGenerated()
         {
-            _cryptography = new Cryptography(ProviderType.PROV_RSA_AES);
+            _cryptography = new RsaCryptoProviderWrapper(ProviderType.PROV_RSA_AES);
             _keyPair = _cryptography.GeneratePrivatePublicKeys();
             _keyPair.PrivateKey.Should().NotBeNullOrWhiteSpace();
             _keyPair.PublicKey.Should().NotBeNullOrWhiteSpace();

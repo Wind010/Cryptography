@@ -24,7 +24,7 @@ namespace Cryptography
             IFileHandler publicKeyFileHandler = new FileHandler(args.PublicKeyFileName);
             IFileHandler privateKeyFileHandler = new FileHandler(args.PrivateKeyFileName);
 
-            var cryptography = new Cryptography();
+            var cryptography = new RsaCryptoProviderWrapper();
             PrivatePublicKeyPair keyPair = cryptography.GeneratePrivatePublicKeys();
 
             if (args.ShowKeys)
@@ -50,7 +50,7 @@ namespace Cryptography
             IFileHandler unEncryptedFileHandler = new FileHandler(args.UnencryptedFileName);
             IFileHandler encryptedFileHandler = new FileHandler(args.EncryptedFileName);
 
-            var cryptography = new Cryptography();
+            var cryptography = new RsaCryptoProviderWrapper();
             string publicKey = publicKeyFileHandler.ReadFile();
             string unencryptedText = unEncryptedFileHandler.ReadFile();
             Byte[] encryptedBytes = cryptography.Encrypt(publicKey, unencryptedText);
@@ -80,7 +80,7 @@ namespace Cryptography
             IFileHandler unEncryptedFileHandler = new FileHandler(args.UnencryptedFileName);
             IFileHandler encryptedFileHandler = new FileHandler(args.EncryptedFileName);
 
-            var cryptography = new Cryptography();
+            var cryptography = new RsaCryptoProviderWrapper();
             string privateKey = privateKeyFileHandler.ReadFile();
             Byte[] encryptedBytes = encryptedFileHandler.ReadEncryptedFile();
             string decryptedText = cryptography.Decrypt(privateKey, encryptedBytes);

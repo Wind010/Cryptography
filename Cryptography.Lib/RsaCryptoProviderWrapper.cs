@@ -8,12 +8,12 @@ namespace Cryptography.Lib
     using Extensions;
     using Models;
 
-    public class Cryptography : ICryptography
+    public class RsaCryptoProviderWrapper : ICryptography
     {
         private readonly ProviderType _providerType;
 
 
-        public Cryptography(ProviderType providerType = ProviderType.PROV_RSA_FULL)
+        public RsaCryptoProviderWrapper(ProviderType providerType = ProviderType.PROV_RSA_FULL)
         {
             _providerType = providerType;
         }

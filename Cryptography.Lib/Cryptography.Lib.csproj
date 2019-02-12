@@ -5,7 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoFixture.AutoMoq" Version="4.1.0" />
+    <PackageReference Include="AutoFixture.AutoMoq" Version="4.8.0" />
+    <PackageReference Include="System.Security.Cryptography.Cng" Version="4.5.0" />
   </ItemGroup>
 
 </Project>
