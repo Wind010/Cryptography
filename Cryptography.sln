@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cryptography", "Console\Cry
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cryptography.Common", "Common\Cryptography.Common.csproj", "{D7E9A14C-43E6-4A78-9EC0-64D8B47978CD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cryptography.Common.Tests", "Tests\Cryptography.Common.Tests\Cryptography.Common.Tests.csproj", "{E0BF1379-5A13-46B1-91A2-3B9277C9316D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,12 +37,17 @@ Global
 		{D7E9A14C-43E6-4A78-9EC0-64D8B47978CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D7E9A14C-43E6-4A78-9EC0-64D8B47978CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D7E9A14C-43E6-4A78-9EC0-64D8B47978CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0BF1379-5A13-46B1-91A2-3B9277C9316D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0BF1379-5A13-46B1-91A2-3B9277C9316D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0BF1379-5A13-46B1-91A2-3B9277C9316D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0BF1379-5A13-46B1-91A2-3B9277C9316D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{6E094388-E668-441D-B7C5-B33C188C42FE} = {3A2D90CA-4D32-4D04-A7EC-71E5D2E05633}
+		{E0BF1379-5A13-46B1-91A2-3B9277C9316D} = {3A2D90CA-4D32-4D04-A7EC-71E5D2E05633}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4A6D791F-762A-432A-ACAB-6EBDBCA0DA7A}

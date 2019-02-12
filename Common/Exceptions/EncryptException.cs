@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Cryptography.Lib.Exceptions
+namespace Cryptography.Common.Exceptions
 {
     [Serializable]
     [ExcludeFromCodeCoverage]

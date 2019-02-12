@@ -2,7 +2,7 @@
 using System;
 using System.IO;
 
-namespace Cryptography.Lib
+namespace Cryptography.Common
 {
     public class FileHandler : IFileHandler
     {

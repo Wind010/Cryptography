@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 
-namespace Cryptography.Lib.Exceptions
+namespace Cryptography.Common.Exceptions
 {
     [Serializable]
     [ExcludeFromCodeCoverage]

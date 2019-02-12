@@ -1,5 +1,5 @@
 ﻿
-namespace Cryptography.Lib.Models
+namespace Cryptography.Common.Models
 {
     public class PrivatePublicKeyPair
     {
