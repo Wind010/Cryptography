@@ -5,7 +5,7 @@ namespace Cryptography.Core
     using Common.Models;
     using Common.Exceptions;
 
-    public interface ICryptography
+    public interface IRsaCryptoProvider
     {
 
         PrivatePublicKeyPair GeneratePrivatePublicKeys();
