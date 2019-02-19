@@ -10,7 +10,7 @@ namespace Cryptography.Core.Tests
     [TestClass]
     public class RsaCryptoProviderTests
     {
-        private IRsaCryptoProvider _cryptography;
+        private IRsaCryptoProvider _rsaCryptoProvider;
         private PrivatePublicKeyPair _keyPair;
 
         [ClassInitialize()]
@@ -21,8 +21,8 @@ namespace Cryptography.Core.Tests
         [TestInitialize]
         public void Initialize()
         {
-            _cryptography = new RsaCrypoProvider();
-            _keyPair = _cryptography.GeneratePrivatePublicKeys();
+            _rsaCryptoProvider = new RsaCrypoProvider();
+            _keyPair = _rsaCryptoProvider.GeneratePrivatePublicKeys();
         }
 
         [TestCleanup]
@@ -34,7 +34,7 @@ namespace Cryptography.Core.Tests
         [TestMethod]
         public void GeneratePrivatePublicKeys_PROV_RSA_FULL_KeysGenerated()
         {
-            _keyPair = _cryptography.GeneratePrivatePublicKeys();
+            _keyPair = _rsaCryptoProvider.GeneratePrivatePublicKeys();
             _keyPair.PrivateKey.Should().NotBeNullOrWhiteSpace();
             _keyPair.PublicKey.Should().NotBeNullOrWhiteSpace();
         }
@@ -42,8 +42,8 @@ namespace Cryptography.Core.Tests
         [TestMethod]
         public void GeneratePrivatePublicKeys_PROV_RSA_AES_KeysGenerated()
         {
-            _cryptography = new RsaCrypoProvider(ProviderType.PROV_RSA_AES);
-            _keyPair = _cryptography.GeneratePrivatePublicKeys();
+            _rsaCryptoProvider = new RsaCrypoProvider(ProviderType.PROV_RSA_AES);
+            _keyPair = _rsaCryptoProvider.GeneratePrivatePublicKeys();
             _keyPair.PrivateKey.Should().NotBeNullOrWhiteSpace();
             _keyPair.PublicKey.Should().NotBeNullOrWhiteSpace();
             _keyPair.PrivateKey.Should().NotBe(_keyPair.PublicKey);
@@ -53,19 +53,19 @@ namespace Cryptography.Core.Tests
         public void Encrypt_PROV_RSA_FULL_StringEncrypted()
         {
             const string Test = "Test";
-            byte[] encryptedBytes = _cryptography.Encrypt(_keyPair.PublicKey, Test);
+            byte[] encryptedBytes = _rsaCryptoProvider.Encrypt(_keyPair.PublicKey, Test);
 
             encryptedBytes.Length.Should().NotBe(0);
-            _cryptography.Decrypt(_keyPair.PrivateKey, encryptedBytes).Should().Be(Test);
+            _rsaCryptoProvider.Decrypt(_keyPair.PrivateKey, encryptedBytes).Should().Be(Test);
         }
 
         [TestMethod]
         public void Decrypt_PROV_RSA_FULL_StringDecrypted()
         {
             const string Test = "Test";
-            byte[] encryptedBytes = _cryptography.Encrypt(_keyPair.PublicKey, Test);
+            byte[] encryptedBytes = _rsaCryptoProvider.Encrypt(_keyPair.PublicKey, Test);
 
-            _cryptography.Decrypt(_keyPair.PrivateKey, encryptedBytes).Should().Be(Test);
+            _rsaCryptoProvider.Decrypt(_keyPair.PrivateKey, encryptedBytes).Should().Be(Test);
         }
 
 
