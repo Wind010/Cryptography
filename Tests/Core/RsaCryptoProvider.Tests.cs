@@ -8,9 +8,9 @@ namespace Cryptography.Core.Tests
     using FluentAssertions;
 
     [TestClass]
-    public class CryptographyTests
+    public class RsaCryptoProviderTests
     {
-        private ICryptography _cryptography;
+        private IRsaCryptoProvider _cryptography;
         private PrivatePublicKeyPair _keyPair;
 
         [ClassInitialize()]

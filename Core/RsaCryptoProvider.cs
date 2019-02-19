@@ -8,7 +8,7 @@ namespace Cryptography.Core
     using Common.Exceptions;
     using Extensions;
 
-    public class RsaCrypoProvider : ICryptography
+    public class RsaCrypoProvider : IRsaCryptoProvider
     {
         private readonly ProviderType _providerType;
 
