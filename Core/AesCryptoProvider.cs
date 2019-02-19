@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 
 namespace Cryptography.Core
 {
-    public class AesCryptoProvider
+    public class AesCryptoProvider : IAesCryptoProvider
     {
         private readonly byte[] _key;
         private readonly CipherMode _mode;
@@ -17,6 +17,31 @@ namespace Cryptography.Core
         {
             _key = key ?? throw new ArgumentNullException(nameof(key));
             _mode = mode;
+        }
+
+        public AesCryptoProvider(uint keySize = 256, CipherMode mode = CipherMode.CBC)
+        {
+            // TODO: Add enum for supported 128/192/256 standard sizes.
+            _mode = mode;
+
+            _key = GetRandomBytes(keySize);
+        }
+
+
+        /// <summary>
+        /// Get cryptographically secure random bytes.
+        /// </summary>
+        /// <param name="keySize"><see cref="int"/>Size of key to generate.</param>
+        /// <returns><see cref="byte[]"/>The random key generated for use as an initialization vector.</returns>
+        public static byte[] GetRandomBytes(uint keySize = 256)
+        {
+            var key = new byte[keySize];
+            using (var random = new RNGCryptoServiceProvider())
+            {
+                random.GetBytes(key);
+            }
+
+            return key;
         }
 
         /// <summary>
