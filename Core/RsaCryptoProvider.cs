@@ -8,12 +8,12 @@ namespace Cryptography.Core
     using Common.Exceptions;
     using Extensions;
 
-    public class RsaCryptoProviderWrapper : ICryptography
+    public class RsaCrypoProvider : ICryptography
     {
         private readonly ProviderType _providerType;
 
 
-        public RsaCryptoProviderWrapper(ProviderType providerType = ProviderType.PROV_RSA_FULL)
+        public RsaCrypoProvider(ProviderType providerType = ProviderType.PROV_RSA_FULL)
         {
             _providerType = providerType;
         }
