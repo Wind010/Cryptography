@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Security.Cryptography;
 
@@ -11,6 +12,7 @@ namespace Cryptography.Core.Tests
 
 
     [TestClass]
+    [ExcludeFromCodeCoverage]
     public class AesCryptoProviderExtensionsTests
     {
         private const string TestString = "Test";

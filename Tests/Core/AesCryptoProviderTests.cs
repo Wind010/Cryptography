@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text;
 using System.Security.Cryptography;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -8,6 +9,7 @@ namespace Cryptography.Core.Tests
     using FluentAssertions;
 
     [TestClass]
+    [ExcludeFromCodeCoverage]
     public class AesCryptoProviderTests
     {
         private IAesCryptoProvider _aesCryptoProvider;
