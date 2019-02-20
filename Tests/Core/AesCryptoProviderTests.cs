@@ -1,8 +1,10 @@
-﻿using System.Security.Cryptography;
+﻿using System.Text;
+using System.Security.Cryptography;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Cryptography.Core.Tests
 {
+    using Extensions;
     using FluentAssertions;
 
     [TestClass]
@@ -10,9 +12,16 @@ namespace Cryptography.Core.Tests
     {
         private IAesCryptoProvider _aesCryptoProvider;
 
+        const string _plainText = "Hello";
+        static byte[] _key;
+        static byte[] _hashKey;
+
+
         [ClassInitialize()]
         public static void ClassInitialize(TestContext context)
         {
+            _key = AesCryptoProvider.GetRandomBytes(16);
+            _hashKey = "Secret".ToBytes(Encoding.UTF8);
         }
 
         [TestInitialize]
@@ -29,7 +38,7 @@ namespace Cryptography.Core.Tests
         [TestMethod]
         public void GetRandomBytes_256KeySize_KeyGenerated()
         {
-            const uint expectedKeySize = 256;
+            const ushort expectedKeySize = 256;
             byte[] key = AesCryptoProvider.GetRandomBytes(expectedKeySize);
             key.Length.Should().Be((int)expectedKeySize);
         }
@@ -38,17 +47,31 @@ namespace Cryptography.Core.Tests
         [TestCategory("Integration")]
         public void EncryptAndDecrypt_256KeySize_SuccessfulEncryptionAndDecryption()
         {
-            const uint expectedKeySize = 256;
-            const string PlainText = "Hello";
-            _aesCryptoProvider = new AesCryptoProvider(expectedKeySize, CipherMode.CBC);
+            _aesCryptoProvider = new AesCryptoProvider(_key, _hashKey, CipherMode.CBC);
 
-            byte[] encryptedData = _aesCryptoProvider.Encrypt(PlainText);
+            byte[] encryptedData = _aesCryptoProvider.Encrypt(_plainText);
 
             encryptedData.Length.Should().BeGreaterThan(0);
 
-            _aesCryptoProvider.Decrypt(encryptedData);
+            string decryptedData = _aesCryptoProvider.Decrypt(encryptedData);
+
+            decryptedData.Should().Be(_plainText);
         }
 
+        [TestMethod]
+        [TestCategory("Integration")]
+        public void EncryptSignAndVerifyDecrypt_256KeySize_SuccessfulEncryptionAndDecryption()
+        {
+            _aesCryptoProvider = new AesCryptoProvider(_key, _hashKey, CipherMode.CBC);
+
+            byte[] encryptedData = _aesCryptoProvider.EncryptAndSignWithHmac(_plainText, _hashKey);
+
+            encryptedData.Length.Should().BeGreaterThan(0);
+
+            string decryptedData = _aesCryptoProvider.VerifySignatureAndDecrypt(encryptedData, 256);
+
+            decryptedData.Should().Be(_plainText);
+        }
 
 
     }

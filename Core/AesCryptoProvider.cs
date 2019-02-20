@@ -5,35 +5,62 @@ using System.Security.Cryptography;
 
 namespace Cryptography.Core
 {
+    using Extensions;
+
     public class AesCryptoProvider : IAesCryptoProvider
     {
         private readonly byte[] _key;
+        private readonly byte[] _hashKey;
         private readonly CipherMode _mode;
 
         private const int StartPosition = 0;
-        public const int BitsPerByte = 8;
 
-        public AesCryptoProvider(byte[] key, CipherMode mode = CipherMode.CBC)
+        public const int BitsPerByte = 8;
+        public const string SignatureVerificationFailed = "Signature verification failed.";
+
+        /// <summary>
+        /// The base64 encoded generated secret key.
+        /// </summary>
+        public string GeneratedKey { get; private set; }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="key"><see cref="byte[]"/>The secret key.</param>
+        /// <param name="hashKey"><see cref="byte[]"/>Secret key used for hashing and validating hash.</param>
+        /// <param name="mode"><see cref="CipherMode"/>Recommend CBC.</param>
+        public AesCryptoProvider(byte[] key, byte[] hashKey,
+            CipherMode mode = CipherMode.CBC)
         {
+            // Can support the hashing algorithm here.
             _key = key ?? throw new ArgumentNullException(nameof(key));
+            _hashKey = hashKey ?? throw new ArgumentNullException(nameof(hashKey));
             _mode = mode;
         }
 
-        public AesCryptoProvider(uint keySize = 256, CipherMode mode = CipherMode.CBC)
+        /// <summary>
+        /// Constructor.  Generate secret key if needed.  See GeneratedKey property.
+        /// </summary>
+        /// <param name="keyLength"><see cref="uint"/>Size of secret key to generate.</param>
+        /// <param name="hashKey"><see cref="byte[]"/>Secret key used for hashing and validating hash.</param>
+        /// <param name="mode"><see cref="CipherMode"/>Recommend CBC.</param>
+        public AesCryptoProvider(byte[] hashKey, ushort keyLength = 16, 
+            CipherMode mode = CipherMode.CBC)
         {
-            // TODO: Add enum for supported 128/192/256 standard sizes.
+            // TODO:  Remove this ?
+            _hashKey = hashKey ?? throw new ArgumentNullException(nameof(hashKey));
             _mode = mode;
-
-            _key = GetRandomBytes(keySize);
+            _key = GetRandomBytes(keyLength);
+            GeneratedKey = _key.ToBase64();
         }
 
 
         /// <summary>
         /// Get cryptographically secure random bytes.
         /// </summary>
-        /// <param name="keySize"><see cref="int"/>Size of key to generate.</param>
-        /// <returns><see cref="byte[]"/>The random key generated for use as an initialization vector.</returns>
-        public static byte[] GetRandomBytes(uint keySize = 256)
+        /// <param name="keySize"><see cref="ushort"/>Size of the secret to generate.</param>
+        /// <returns><see cref="byte[]"/>The random bytes generated for use as an secret key.</returns>
+        public static byte[] GetRandomBytes(ushort keySize = 16)
         {
             var key = new byte[keySize];
             using (var random = new RNGCryptoServiceProvider())
@@ -43,6 +70,37 @@ namespace Cryptography.Core
 
             return key;
         }
+
+        /// <summary>
+        /// Sign with HMAC, specifically hashing algorithm of SHA256.
+        /// </summary>
+        /// <param name="encryptedData"><see cref="byte[]"/></param>
+        /// <param name="secret"><see cref="byte"/>The secret used in the hash.</param>
+        /// <returns><see cref="byte[]"/></returns>
+        public byte[] SignWithHmac(byte[] encryptedData, byte[] secret)
+        {
+            return encryptedData.Hash<HMACSHA256>(secret);
+        }
+
+
+        /// <summary>
+        /// Encrypt the string and sign with HMAC using SHA256.
+        /// </summary>
+        /// <param name="plainText"></param>
+        /// <param name="secret"><see cref="byte"/>The secret used in the hash.</param>
+        /// <returns><see cref="byte[]"/>The encrypted data.</returns>
+        public byte[] EncryptAndSignWithHmac(string plainText, byte[] secret)
+        {
+            byte[] encryptedData = Encrypt(plainText);
+            byte[] hash = SignWithHmac(encryptedData, secret);
+
+            var encryptedAndSignedData = new byte[encryptedData.Length + hash.Length];
+            encryptedData.CopyTo(encryptedAndSignedData, StartPosition);
+            hash.CopyTo(encryptedAndSignedData, encryptedData.Length);
+
+            return encryptedAndSignedData;
+        }
+
 
         /// <summary>
         /// Encrypt the string.
@@ -89,41 +147,72 @@ namespace Cryptography.Core
         /// <summary>
         /// Decrypt the cipher.
         /// </summary>
-        /// <param name="encryptedData"><see cref="string"/></param>
+        /// <param name="encryptedPayload"><see cref="byte[]"/></param>
         /// <returns><see cref="string"/>The decrypted string.</returns>
-        public string Decrypt(byte[] encryptedData)
+        public string Decrypt(byte[] encryptedPayload)
         {
-            if (encryptedData == null) { return string.Empty; }
+            if (encryptedPayload == null) { return string.Empty; }
 
-            string plaintext = null;
+            string plainText = string.Empty;
 
             using (Aes aesAlg = Aes.Create())
             {
                 aesAlg.Mode = _mode;
                 aesAlg.Key = _key;
 
-                byte[] iniitalizationVector = new byte[aesAlg.BlockSize / BitsPerByte];
-                byte[] cipherText = new byte[encryptedData.Length - iniitalizationVector.Length];
+                byte[] initalizationVector = new byte[aesAlg.BlockSize / BitsPerByte];
+                byte[] encryptedData = new byte[encryptedPayload.Length - initalizationVector.Length];
 
-                Array.Copy(encryptedData, iniitalizationVector, iniitalizationVector.Length);
-                Array.Copy(encryptedData, iniitalizationVector.Length, cipherText, StartPosition, cipherText.Length);
+                Array.Copy(encryptedPayload, initalizationVector, initalizationVector.Length);
+                Array.Copy(encryptedPayload, initalizationVector.Length, encryptedData, StartPosition, encryptedData.Length);
 
-                aesAlg.IV = iniitalizationVector;
+                aesAlg.IV = initalizationVector;
 
                 ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
 
-                using (var memStream = new MemoryStream(cipherText))
+                using (var memStream = new MemoryStream(encryptedData))
                 {
                     var cryptoStream = new CryptoStream(memStream, decryptor, CryptoStreamMode.Read);
 
                     using (var sr = new StreamReader(cryptoStream))
                     {
-                        plaintext = sr.ReadToEnd();
+                        plainText = sr.ReadToEnd();
                     }
                 }
             }
 
-            return plaintext;
+            return plainText;
+        }
+
+
+        /// <summary>
+        /// Verify that the message signature and decrypt the cipher within.
+        /// </summary>
+        /// <param name="encryptedAndSignedData"><see cref="byte[]"/></param>
+        /// <param name="hashSize"><see cref="ushort"/>Size of the hash used.</param>
+        /// <returns><see cref="string"/>The decrypted string.</returns>
+        public string VerifySignatureAndDecrypt(byte[] encryptedAndSignedData, ushort hashSize)
+        {
+            // TODO:  Using ushort for now until we use an enumeration.
+            // Int32 is default and more runtime efficient at the cost of storage.
+            if (encryptedAndSignedData == null) { return string.Empty; }
+
+            int signatureSize = hashSize / BitsPerByte; 
+            
+            byte[] encryptedData = new byte[encryptedAndSignedData.Length - signatureSize];
+            byte[] signature = new byte[signatureSize];
+
+            encryptedAndSignedData.CopyTo(encryptedData, 0);
+            encryptedAndSignedData.CopyTo(signature, encryptedData.Length);
+
+            byte[] generatedHash = encryptedData.Hash<HMACSHA256>(_hashKey);
+
+            if (signature != generatedHash)
+            {
+                throw new CryptographicException(SignatureVerificationFailed);
+            }
+
+            return Decrypt(encryptedData);
         }
 
 
