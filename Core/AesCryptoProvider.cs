@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 
 
@@ -202,12 +203,12 @@ namespace Cryptography.Core
             byte[] encryptedData = new byte[encryptedAndSignedData.Length - signatureSize];
             byte[] signature = new byte[signatureSize];
 
-            encryptedAndSignedData.CopyTo(encryptedData, 0);
-            encryptedAndSignedData.CopyTo(signature, encryptedData.Length);
+            Array.Copy(encryptedAndSignedData, encryptedData, encryptedData.Length);
+            Array.Copy(encryptedAndSignedData, encryptedData.Length, signature, StartPosition, signature.Length);
 
             byte[] generatedHash = encryptedData.Hash<HMACSHA256>(_hashKey);
 
-            if (signature != generatedHash)
+            if (! signature.SequenceEqual(generatedHash))
             {
                 throw new CryptographicException(SignatureVerificationFailed);
             }
