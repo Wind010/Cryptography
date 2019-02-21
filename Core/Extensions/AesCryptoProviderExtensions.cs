@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -29,6 +30,25 @@ namespace Cryptography.Core.Extensions
         public static byte[] ToBytes(this string str, Encoding encoding)
         {
             return encoding.GetBytes(str);
+        }
+
+        /// <summary>
+        /// Convert a hexadecimal encoded string to byte array.
+        /// </summary>
+        /// <param name="hex"><see cref="string"/></param>
+        /// <returns><see cref="byte[]"/></returns>
+        public static byte[] ToBytes(this string hex)
+        {
+            if (hex == null)
+            {
+                throw new ArgumentNullException(nameof(hex));
+            }
+
+            // Could be faster/more efficient if needed.
+            return Enumerable.Range(0, hex.Length)
+                     .Where(x => x % 2 == 0)
+                     .Select(x => Convert.ToByte(hex.Substring(x, 2), 16))
+                     .ToArray();
         }
 
         /// <summary>
