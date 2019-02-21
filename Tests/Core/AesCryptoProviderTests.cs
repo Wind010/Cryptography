@@ -78,7 +78,7 @@ namespace Cryptography.Core.Tests
 
             string decryptedData = _aesCryptoProvider.VerifySignatureAndDecrypt(encryptedData, 256, Encoding.UTF8);
 
-            decryptedData.Should().Be(_plainText);
+            decryptedData.Should().Be(plainText);
         }
 
 
