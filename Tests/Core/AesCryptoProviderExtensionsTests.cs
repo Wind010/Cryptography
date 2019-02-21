@@ -105,7 +105,31 @@ namespace Cryptography.Core.Tests
         }
 
         [TestMethod]
-        public void ToBytes_ValidString_ReturnsByteArray()
+        public void ToBytes_ValidHexString_ReturnsByteArray()
+        {
+            string hexString = TestString.ToBytes(Encoding.UTF8).ToHex();
+            byte[] byteArr = hexString.ToBytes();
+            byteArr.Length.Should().Be(TestString.Length);
+        }
+
+        [TestMethod]
+        public void ToBytes_EmptyHexString_ReturnsByteArray()
+        {
+            byte[] byteArr = string.Empty.ToBytes();
+            byteArr.Length.Should().Be(0);
+        }
+
+        [TestMethod]
+        public void ToBytes_Null_ThrowsArgumentNullException()
+        {
+            string hex = null;
+            Action act = () => hex.ToBytes();
+            act.Should().Throw<ArgumentNullException>()
+                .And.ParamName.Should().Be(nameof(hex));
+        }
+
+        [TestMethod]
+        public void ToBytes_ValidUtf8String_ReturnsByteArray()
         {
             byte[] byteArr = TestString.ToBytes(Encoding.UTF8);
             byteArr.Length.Should().Be(TestString.Length);
@@ -119,7 +143,7 @@ namespace Cryptography.Core.Tests
         }
 
         [TestMethod]
-        public void ToBytes_NullByteArray_ThrowsArgumentNullException()
+        public void ToBytes_NullUtf8String_ThrowsArgumentNullException()
         {
             string s = null;
             Action act = () => s.ToBytes(Encoding.UTF8);
