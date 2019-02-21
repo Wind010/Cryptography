@@ -2,11 +2,12 @@
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
-
+using System.Text;
 
 namespace Cryptography.Core
 {
     using Extensions;
+    
 
     public class AesCryptoProvider : IAesCryptoProvider
     {
@@ -150,11 +151,9 @@ namespace Cryptography.Core
         /// </summary>
         /// <param name="encryptedPayload"><see cref="byte[]"/></param>
         /// <returns><see cref="string"/>The decrypted string.</returns>
-        public string Decrypt(byte[] encryptedPayload)
+        public byte[] Decrypt(byte[] encryptedPayload)
         {
-            if (encryptedPayload == null) { return string.Empty; }
-
-            string plainText = string.Empty;
+            if (encryptedPayload == null) { return Array.Empty<byte>();  }
 
             using (Aes aesAlg = Aes.Create())
             {
@@ -171,18 +170,27 @@ namespace Cryptography.Core
 
                 ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
 
-                using (var memStream = new MemoryStream(encryptedData))
+                using (var encryptedStream = new MemoryStream(encryptedData))
+                using (var decryptedStream = new MemoryStream())
+                using (var cryptoStream = new CryptoStream(decryptedStream, decryptor, CryptoStreamMode.Write))
                 {
-                    var cryptoStream = new CryptoStream(memStream, decryptor, CryptoStreamMode.Read);
-
-                    using (var sr = new StreamReader(cryptoStream))
-                    {
-                        plainText = sr.ReadToEnd();
-                    }
+                    cryptoStream.Write(encryptedData, 0, encryptedData.Length);
+                    cryptoStream.FlushFinalBlock();
+                    return decryptedStream.ToArray();
                 }
             }
+        }
 
-            return plainText;
+
+        /// <summary>
+        /// Decrypt the cipher.
+        /// </summary>
+        /// <param name="encryptedPayload"><see cref="byte[]"/></param>
+        /// <param name="encoding"><see cref="Encoding"/></param>
+        /// <returns><see cref="string"/>The decrypted string.</returns>
+        public string Decrypt(byte[] encryptedPayload, Encoding encoding)
+        {
+            return Decrypt(encryptedPayload).ToString(encoding);
         }
 
 
@@ -191,12 +199,12 @@ namespace Cryptography.Core
         /// </summary>
         /// <param name="encryptedAndSignedData"><see cref="byte[]"/></param>
         /// <param name="hashSize"><see cref="ushort"/>Size of the hash used.</param>
-        /// <returns><see cref="string"/>The decrypted string.</returns>
-        public string VerifySignatureAndDecrypt(byte[] encryptedAndSignedData, ushort hashSize)
+        /// <returns><see cref="byte[]"/>The decrypted string.</returns>
+        public byte[] VerifySignatureAndDecrypt(byte[] encryptedAndSignedData, ushort hashSize)
         {
             // TODO:  Using ushort for now until we use an enumeration.
             // Int32 is default and more runtime efficient at the cost of storage.
-            if (encryptedAndSignedData == null) { return string.Empty; }
+            if (encryptedAndSignedData == null) { return Array.Empty<byte>(); }
 
             int signatureSize = hashSize / BitsPerByte; 
             
@@ -214,6 +222,19 @@ namespace Cryptography.Core
             }
 
             return Decrypt(encryptedData);
+        }
+
+
+
+        /// <summary>
+        /// Verify that the message signature and decrypt the cipher within.
+        /// </summary>
+        /// <param name="encryptedAndSignedData"><see cref="byte[]"/></param>
+        /// <param name="hashSize"><see cref="ushort"/>Size of the hash used.</param>
+        /// <returns><see cref="string"/>The decrypted string.</returns>
+        public string VerifySignatureAndDecrypt(byte[] encryptedAndSignedData, ushort hashSize, Encoding encoding)
+        {
+            return VerifySignatureAndDecrypt(encryptedAndSignedData, hashSize).ToString(encoding);
         }
 
 
