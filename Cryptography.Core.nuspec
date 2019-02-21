@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
-    <id>Cryptography</id>
-    <title>Cryptography</title>
+    <id>Cryptography.Core</id>
+    <title>Cryptography.Core</title>
     <version>1.0.0.0</version>
     <owners>Jeff Tong</owners>
     <authors>Jeff Tong</authors>
@@ -13,7 +13,8 @@
       A wrapper around RsaServiceProvider and AES.
     </description>
     <language>en-US</language>
-    <licenseUrl>https://github.com/Wind010/Cryptography/blob/master/LICENSE</licenseUrl>
+    <!--<license type="file">LICENSE</license>-->
+	<licenseUrl>https://github.com/Wind010/Cryptography/blob/master/LICENSE</licenseUrl>
     <iconUrl>https://github.com/Wind010/Cryptography/blob/master/key_lock.png</iconUrl>
     <projectUrl>https://github.com/Wind010/Cryptography</projectUrl>
     <repository type="git" url="https://github.com/Wind010/Cryptography.git" />
@@ -33,6 +34,7 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="..\Artifacts\Release\netcoreapp2.2\Cryptography*.*" exclude="**\*.json" target="lib\netcoreapp2.2" />
+    <file src="Core\bin\Release\netstandard2.0\Cryptography*.*" exclude="**\*.json" target="netstandard2.0" />
+	<!--<file src="..\LICENSE" target="" />-->
   </files>
 </package>
