@@ -1,6 +1,9 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Text;
 using System.Security.Cryptography;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Cryptography.Core.Tests
@@ -9,6 +12,7 @@ namespace Cryptography.Core.Tests
     using FluentAssertions;
     using System;
     using System.IO;
+
 
     [TestClass]
     [ExcludeFromCodeCoverage]
@@ -77,7 +81,6 @@ namespace Cryptography.Core.Tests
             decryptedData.Should().Be(_plainText);
         }
 
-
         [TestMethod]
         [TestCategory("Integration")]
         public void EncryptSignAndVerifyDecrypt_ExternalKeys_16KeySize_256Hmac_SuccessfulEncryptionAndDecryption()
@@ -92,19 +95,70 @@ namespace Cryptography.Core.Tests
             _aesCryptoProvider = new AesCryptoProvider(encryptionKey, validationKey, CipherMode.CBC);
 
             byte[] myEncryptedData = _aesCryptoProvider.EncryptAndSignWithHmac(_plainText, validationKey);
-
+            // DE17B807DE016FB4DF6D5971344E75295B4F2EA09ACDCB828B2B98D08B78FBA45C631DEC2BE9E9E29EE5C2EE36B1B50DE9E7C932CF0A8A31E8E56A7F4300D656C40A96F57318FB7AA779EEBE0253E0FE
             //hexEncryptedDataFromClient.Should().Be(myEncryptedData.ToHex());
 
             byte[] encryptedData = hexEncryptedDataFromClient.ToBytes();
 
             encryptedData.Length.Should().BeGreaterThan(0);
 
-            string decryptedData = _aesCryptoProvider.VerifySignatureAndDecrypt(encryptedData, 256);
+            byte[] decryptedData = _aesCryptoProvider.VerifySignatureAndDecrypt(encryptedData, 256);
 
-            decryptedData.Should().Be(plainText);
+            using (var ticketBlobStream = new MemoryStream(decryptedData))
+            using (SerializingBinaryReader ticketReader = new SerializingBinaryReader(ticketBlobStream))
+            {
+                byte serializedFormatVersion = ticketReader.ReadByte();
+                if (serializedFormatVersion != 0x01)
+                    throw new ArgumentException("The data is not in the correct format, first byte must be 0x01.", nameof(decryptedData));
+
+                int ticketVersion = ticketReader.ReadByte();
+
+                DateTime ticketIssueDateUtc = new DateTime(ticketReader.ReadInt64(), DateTimeKind.Utc);
+
+                byte spacer = ticketReader.ReadByte();
+                if (spacer != 0xFE)
+                    throw new ArgumentException("The data is not in the correct format, tenth byte must be 0xFE.", nameof(decryptedData));
+
+                DateTime ticketExpirationDateUtc = new DateTime(ticketReader.ReadInt64(), DateTimeKind.Utc);
+                bool ticketIsPersistent = ticketReader.ReadByte() == 1;
+
+                string ticketName = ticketReader.ReadBinaryString();
+                string ticketUserData = ticketReader.ReadBinaryString();
+                string ticketCookiePath = ticketReader.ReadBinaryString();
+                byte footer = ticketReader.ReadByte();
+                if (footer != 0xFF)
+                    throw new ArgumentException("The data is not in the correct format, footer byte must be 0xFF.", nameof(decryptedData));
+            }
         }
 
+ 
+        internal sealed class SerializingBinaryReader : BinaryReader
+        {
+            public SerializingBinaryReader(Stream input)
+                : base(input)
+            {
+            }
+
+            public string ReadBinaryString()
+            {
+                int charCount = Read7BitEncodedInt();
+                byte[] bytes = ReadBytes(charCount * 2);
+
+                char[] chars = new char[charCount];
+                for (int i = 0; i < chars.Length; i++)
+                {
+                    chars[i] = (char)(bytes[2 * i] | (bytes[2 * i + 1] << 8));
+                }
+
+                return new String(chars);
+            }
+
+            public override string ReadString()
+            {
+                // should never call this method since it will produce wrong results
+                throw new NotImplementedException();
+            }
+        }
 
     }
 }
-
