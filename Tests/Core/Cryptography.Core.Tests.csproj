@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Common\Cryptography.Common.csproj" />
     <ProjectReference Include="..\..\Core\Cryptography.Core.csproj" />
   </ItemGroup>
 
